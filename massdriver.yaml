@@ -1,0 +1,146 @@
+schema: draft-07
+name: azure-cdn
+description: Azure Content Delivery Network offers developers a global solution for rapidly delivering high-bandwidth content to users by caching their content at strategically placed physical nodes across the world.
+source_url: github.com/YOUR_NAME_HERE/azure-cdn
+access: private
+type: infrastructure
+
+steps:
+  - path: src
+    provisioner: bicep
+
+params:
+  required:
+    - provisioner
+    - profile_config
+    - endpoints
+  properties:
+    provisioner:
+      title: Provisioner configuration
+      type: object
+      required:
+        - location
+      properties:
+        location:
+          $ref: https://raw.githubusercontent.com/massdriver-cloud/artifact-definitions/main/definitions/types/azure-region.json
+    profile_config:
+      title: CDN Profile configuration
+      type: object
+      required:
+        - sku
+      properties:
+        sku:
+          title: CDN SKU
+          descrption: Select the CDN SKU
+          type: string
+          default: Standard_Microsoft
+          oneOf:
+            - title: Premium Verizon
+              const: Premium_Verizon
+            - title: Standard Akamai
+              const: Standard_Akamai
+            - title: Standard ChinaCdn
+              const: Standard_ChinaCdn
+            - title: Standard Microsoft
+              const: Standard_Microsoft
+            - title: Standard Verizon
+              const: Standard_Verizon
+    endpoints:
+      title: CDN Endpoints configuration
+      description: Add CDN endpoints to your profile
+      type: array
+      minItems: 1
+      default: []
+      items:
+        title: CDN Endpoint
+        type: object
+        required:
+          - origin_name
+          - hostname
+          - http_allowed
+          - https_allowed
+          - query_caching_behavior
+        properties:
+          origin_name:
+            title: Origin name
+            description: The name of the origin
+            type: string
+            pattern: ^[a-z0-9]{1}[a-z0-9-]+[a-z0-9]{1}$
+            message:
+              pattern: Only lowercase letters, numbers, and hyphens are allowed
+          hostname:
+            title: Hostname
+            description: The hostname of the endpoint which is prepended to `.azureedge.net`. **Must be globally unique.** Can be a custom hostname (e.g. `example.com`) or an Azure-specific hostname (e.g. `mystorage.blob.core.windows.net` or `mywebapp.azurewebsites.net`)
+            type: string
+          http_allowed:
+            title: HTTP allowed
+            description: Allow HTTP traffic
+            type: boolean
+          https_allowed:
+            # one of http/https must be allowed, make a dependency?
+            title: HTTPS allowed
+            description: Allow HTTPS traffic
+            type: boolean
+          query_caching_behavior:
+            title: Query caching behavior
+            description: The query caching behavior
+            type: string
+            default: NotSet
+            oneOf:
+              - title: Ignore Query String
+                const: IgnoreQueryString
+              - title: Bypass Cache
+                const: BypassCache
+              - title: Use Query String
+                const: UseQueryString
+              - title: Not Set
+                const: NotSet
+        not:
+          properties:
+            http_allowed:
+              const: false
+            https_allowed:
+              const: false
+          required:
+            - http_allowed
+            - https_allowed
+
+connections:
+  required:
+    - azure_service_principal
+  properties:
+    azure_service_principal:
+      $ref: massdriver/azure-service-principal
+
+artifacts:
+  properties: {}
+
+ui:
+  ui:order:
+    - provisioner
+    - profile_config
+    - endpoints
+    - '*'
+  provisioner:
+    ui:order:
+      - location
+      - '*'
+    location:
+      ui:field: supportedCloudLocationsDropdown
+      cloudService: Azure
+  profile_config:
+    ui:order:
+      - sku
+      - '*'
+  endpoints:
+    ui:order:
+      - endpoint
+      - '*'
+    endpoint:
+      ui:order:
+        - origin_name
+        - hostname
+        - http_allowed
+        - https_allowed
+        - query_caching_behavior
+        - '*'
