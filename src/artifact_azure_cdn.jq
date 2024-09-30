@@ -10,7 +10,7 @@
 	},
 	"specs": {
 		 "azure": {
-			"region": .params.provisioner.region
+			"region": .params.provisioner.location
 		}
 	}
 }

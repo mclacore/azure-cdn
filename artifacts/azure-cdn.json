@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$md": {
+    "access": "private",
+    "name": "azure-cdn"
+  },
+  "type": "object",
+  "title": "Azure CDN",
+  "description": "",
+  "additionalProperties": false,
+  "required": [
+    "data",
+    "specs"
+  ],
+  "properties": {
+    "data": {
+      "title": "Artifact Data",
+      "type": "object",
+      "required": [
+        "infrastructure",
+        "security"
+      ],
+      "properties": {
+        "infrastructure": {
+          "title": "Infrastructure configuration",
+          "type": "object",
+          "required": [
+            "ari",
+            "endpoints"
+          ],
+          "properties": {
+            "ari": {
+              "type": "string",
+              "title": "Azure Resource ID",
+              "description": "Azure Resource ID",
+              "examples": [
+                "/subscriptions/12345678-1234-1234-abcd-1234567890ab/resourceGroups/resource-group-name/providers/Microsoft.Network/virtualNetworks/network-name"
+              ],
+              "pattern": "^/subscriptions/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/resource(g|G)roups/[a-zA-Z0-9-_.()]{0,89}[a-zA-Z0-9-_()]/providers/Microsoft\\.[a-zA-Z]+/[a-zA-Z]+(?:/[a-zA-Z0-9-_.()]+)+$",
+              "message": {
+                "pattern": "Must be a valid Azure Resource ID"
+              }
+            },
+            "endpoints": {
+              "title": "Azure CDN Endpoints",
+              "description": "Azure CDN endpoints and origins",
+              "additionalProperties": false,
+              "type": "array"
+            }
+          }
+        },
+        "security": {
+          "title": "Security configuration",
+          "type": "object",
+          "required": [],
+          "properties": {
+            "iam": {
+              "title": "IAM",
+              "description": "IAM Roles and Scopes",
+              "additionalProperties": false,
+              "patternProperties": {
+                "^[a-z]+[a-z_]*[a-z]$": {
+                  "type": "object",
+                  "required": [
+                    "role",
+                    "scope"
+                  ],
+                  "properties": {
+                    "role": {
+                      "title": "Role",
+                      "description": "Azure Role",
+                      "pattern": "^[a-zA-Z ]+$",
+                      "message": {
+                        "pattern": "Must be a valid Azure Role (uppercase, lowercase letters and spaces)"
+                      },
+                      "examples": [
+                        "Storage Blob Data Reader"
+                      ]
+                    },
+                    "scope": {
+                      "title": "Scope",
+                      "description": "Azure IAM Scope",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "specs": {
+      "title": "Artifact Specs",
+      "type": "object",
+      "properties": {
+        "azure": {
+          "type": "object",
+          "title": "Azure Artifact Specs",
+          "description": "",
+          "required": [
+            "region"
+          ],
+          "properties": {
+            "region": {
+              "title": "Azure Region",
+              "description": "Select the Azure region to provision resources in.",
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

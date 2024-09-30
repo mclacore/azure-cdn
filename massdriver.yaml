@@ -1,7 +1,7 @@
 schema: draft-07
 name: azure-cdn
 description: Azure Content Delivery Network offers developers a global solution for rapidly delivering high-bandwidth content to users by caching their content at strategically placed physical nodes across the world.
-source_url: github.com/YOUR_NAME_HERE/azure-cdn
+source_url: github.com/mclacore/azure-cdn
 access: private
 type: infrastructure
 
@@ -113,7 +113,11 @@ connections:
       $ref: massdriver/azure-service-principal
 
 artifacts:
-  properties: {}
+  required:
+    - azure_cdn
+  properties:
+    azure_cdn:
+      $ref: lacore/azure-cdn
 
 ui:
   ui:order:

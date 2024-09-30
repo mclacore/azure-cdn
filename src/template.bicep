@@ -15,7 +15,7 @@ resource profile 'Microsoft.Cdn/profiles@2023-07-01-preview' = {
 
 resource endpoint 'Microsoft.Cdn/profiles/endpoints@2023-07-01-preview' = [for endpoint in endpoints: {
   parent: profile
-  name: md_metadata.name_prefix
+  name: '${md_metadata.name_prefix}-${endpoint.origin_name}'
   location: provisioner.location
   tags: md_metadata.default_tags
   properties: {
