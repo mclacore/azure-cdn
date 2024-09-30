@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # azure-cdn
 Azure CDN bundle for Massdriver writtein in Bicep
 =======
@@ -150,4 +149,3 @@ Please connect with us!
 <!-- markdownlint-restore -->
 
 <!-- CONNECT:END -->
->>>>>>> ab482c5 (initial commit)
