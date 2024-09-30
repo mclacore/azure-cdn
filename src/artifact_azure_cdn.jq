@@ -3,7 +3,7 @@
 		"infrastructure": {
 			"ari": .outputs.profileId.value,
 			"endpoints": [
-				.outputs.endpoint.value
+				.outputs.endpoints.value
 			]
 		},
 		"security": {}
