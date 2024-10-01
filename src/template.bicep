@@ -13,10 +13,11 @@ resource profile 'Microsoft.Cdn/profiles@2023-07-01-preview' = {
   tags: md_metadata.default_tags
 }
 
+
 resource endpoint 'Microsoft.Cdn/profiles/endpoints@2023-07-01-preview' = [
   for endpoint in endpoints: {
     parent: profile
-    name: '${md_metadata.name_prefix}-${endpoint.origin_name}'
+    name: '${md_metadata.name_prefix}-${replace(endpoint.hostname, '.', '-')}'
     location: provisioner.location
     tags: md_metadata.default_tags
     properties: {
@@ -40,10 +41,12 @@ resource endpoint 'Microsoft.Cdn/profiles/endpoints@2023-07-01-preview' = [
   }
 ]
 
+
+
 output profileId string = profile.id
 output endpoints array = [
   for endpoint in endpoints: {
-    name: endpoint.origin_name
+    name: '${md_metadata.name_prefix}-${endpoint.hostname}'
     hostname: endpoint.hostname
   }
 ]

@@ -22,7 +22,54 @@ params:
         - location
       properties:
         location:
-          $ref: https://raw.githubusercontent.com/massdriver-cloud/artifact-definitions/main/definitions/types/azure-region.json
+          title: Azure Region
+          description: Selet the Azure region to deploy the CDN to.
+          type: string
+          oneOf:
+            - title: Global
+              const: global
+            - title: Australia East
+              const: australiaeast
+            - title: Australia Southeast
+              const: australiasoutheast
+            - title: Brazil South
+              const: brazilsouth
+            - title: Canada Central
+              const: canadacentral
+            - title: Canada East
+              const: canadaeast
+            - title: Central India
+              const: centralindia
+            - title: Central US
+              const: centralus
+            - title: East Asia
+              const: eastasia
+            - title: East US
+              const: eastus
+            - title: East US 2
+              const: eastus2
+            - title: Japan East
+              const: japaneast
+            - title: Japan West
+              const: japanwest
+            - title: North Central US
+              const: northcentralus
+            - title: North Europe
+              const: northeurope
+            - title: South Central US
+              const: southcentralus
+            - title: South India
+              const: southindia
+            - title: Southeast Asia
+              const: southeastasia
+            - title: West Europe
+              const: westeurope
+            - title: West India
+              const: westindia
+            - title: West US
+              const: westus
+            - title: West Central US
+              const: westcentralus
     profile_config:
       title: CDN Profile configuration
       type: object
@@ -193,15 +240,6 @@ params:
                 - video/ogg
                 - video/webm
                 - video/x-msvideo
-        not:
-          properties:
-            http_allowed:
-              const: false
-            https_allowed:
-              const: false
-          required:
-            - http_allowed
-            - https_allowed
 
 connections:
   required:
@@ -227,9 +265,6 @@ ui:
     ui:order:
       - location
       - '*'
-    location:
-      ui:field: supportedCloudLocationsDropdown
-      cloudService: Azure
   profile_config:
     ui:order:
       - sku
