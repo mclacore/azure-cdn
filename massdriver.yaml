@@ -55,23 +55,25 @@ params:
         title: CDN Endpoint
         type: object
         required:
-          - origin_name
           - hostname
+          - http_port
+          - https_port
           - http_allowed
           - https_allowed
           - query_caching_behavior
         properties:
-          origin_name:
-            title: Origin name
-            description: The name of the origin
-            type: string
-            pattern: ^[a-z0-9]{1}[a-z0-9-]+[a-z0-9]{1}$
-            message:
-              pattern: Only lowercase letters, numbers, and hyphens are allowed
           hostname:
-            title: Hostname
+            title: Origin hostname
             description: The hostname of the endpoint which is prepended to `.azureedge.net`. **Must be globally unique.** Can be a custom hostname (e.g. `example.com`) or an Azure-specific hostname (e.g. `mystorage.blob.core.windows.net` or `mywebapp.azurewebsites.net`)
             type: string
+          http_port:
+            title: Origin HTTP port value
+            type: number
+            default: 80
+          https_port:
+            title: Origin HTTPS port value
+            type: number
+            default: 443
           http_allowed:
             title: HTTP allowed
             description: Allow HTTP traffic
@@ -95,6 +97,102 @@ params:
                 const: UseQueryString
               - title: Not Set
                 const: NotSet
+          content_types:
+            title: Content-Types to compress
+            description: Select the content types that should be compressed by the CDN.
+            type: array
+            uniqueItems: true
+            minItems: 1
+            default:
+              - application/javascript
+              - application/x-javascript
+              - text/css
+              - text/html
+              - text/javascript
+              - text/plain
+            items:
+              type: string
+              enum:
+                - application/atom+xml
+                - application/epub+zip
+                - application/gzip
+                - application/java-archive
+                - application/javascript
+                - application/json
+                - application/ld+json
+                - application/msword
+                - application/octet-stream
+                - application/ogg
+                - application/pdf
+                - application/rtf
+                - application/vnd.amazon.ebook
+                - application/vnd.apple.installer+xml
+                - application/vnd.ms-excel
+                - application/vnd.ms-fontobject
+                - application/vnd.ms-powerpoint
+                - application/vnd.mozilla.xul+xml
+                - application/vnd.oasis.opendocument.presentation
+                - application/vnd.oasis.opendocument.spreadsheet
+                - application/vnd.oasis.opendocument.text
+                - application/vnd.openxmlformats-officedocument.presentationml.presentation
+                - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+                - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+                - application/vnd.rar
+                - application/vnd.visio
+                - application/x-7z-compressed
+                - application/x-abiword
+                - application/x-bzip
+                - application/x-bzip2
+                - application/x-cdf
+                - application/x-csh
+                - application/x-freearc
+                - application/x-gzip
+                - application/xhtml+xml
+                - application/xml
+                - application/x-httpd-php
+                - application/x-javascript
+                - application/x-sh
+                - application/x-tar
+                - application/x-zip-compressed
+                - application/zip
+                - audio/3gpp
+                - audio/3gpp2
+                - audio/aac
+                - audio/midi
+                - audio/mpeg
+                - audio/ogg
+                - audio/wav
+                - audio/webm
+                - audio/x-midi
+                - font/otf
+                - font/ttf
+                - font/woff
+                - font/woff2
+                - image/apng
+                - image/avif
+                - image/bmp
+                - image/gif
+                - image/jpeg
+                - image/png
+                - image/svg+xml
+                - image/tiff
+                - image/vnd.microsoft.icon
+                - image/webp
+                - text/calendar
+                - text/css
+                - text/csv
+                - text/html
+                - text/javascript
+                - text/plain
+                - text/xml
+                - video/3gpp
+                - video/3gpp2
+                - video/mp2t
+                - video/mp4
+                - video/mpeg
+                - video/ogg
+                - video/webm
+                - video/x-msvideo
         not:
           properties:
             http_allowed:
@@ -137,14 +235,17 @@ ui:
       - sku
       - '*'
   endpoints:
-    ui:order:
-      - endpoint
-      - '*'
-    endpoint:
+    items:
       ui:order:
-        - origin_name
         - hostname
+        - http_port
+        - https_port
         - http_allowed
         - https_allowed
         - query_caching_behavior
+        - content_types
         - '*'
+      content_types:
+        ui:widget: select
+        ui:options:
+          multiple: true

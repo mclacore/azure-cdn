@@ -22,26 +22,20 @@ resource endpoint 'Microsoft.Cdn/profiles/endpoints@2023-07-01-preview' = [
     properties: {
       originHostHeader: endpoint.hostname
       origins: [
-        for origin in endpoint.origins: {
-          name: origin.origin_name
+        {
+          name: replace(endpoint.hostname, '.', '-')
           properties: {
-            hostName: origin.hostname
-            httpPort: origin.http_port
-            httpsPort: origin.https_port
+            hostName: endpoint.hostname
+            httpPort: endpoint.http_port
+            httpsPort: endpoint.https_port
           }
         }
       ]
       isHttpAllowed: endpoint.http_allowed
       isHttpsAllowed: endpoint.https_allowed
       queryStringCachingBehavior: endpoint.query_caching_behavior
-      contentTypesToCompress: [
-        'text/plain'
-        'text/html'
-        'text/css'
-        'application/x-javascript'
-        'text/javascript'
-        'application/javascript'
-      ]
+      // must be a valid MIME type: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+      contentTypesToCompress: endpoint.content_types
     }
   }
 ]
