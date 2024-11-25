@@ -45,7 +45,25 @@
               "title": "Azure CDN Endpoints",
               "description": "Azure CDN endpoints and origins",
               "additionalProperties": false,
-              "type": "array"
+              "type": "array",
+              "default": [],
+              "items": {
+                "type": "object",
+                "require": [
+                  "name",
+                  "hostname"
+                ],
+                "properties": {
+                  "name": {
+                    "title": "Endpoint name",
+                    "type": "string"
+                  },
+                  "hostname": {
+                    "title": "Endpoint hostname",
+                    "type": "string"
+                  }
+                }
+              }
             }
           }
         },
